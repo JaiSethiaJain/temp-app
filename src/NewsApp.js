@@ -4,6 +4,20 @@ import './bootstrap.min.css';
 
 const newsapi = "https://newsapi.org/v2/";
 const newsapiKey = "7e38d3a25cc74ddbacd9020dfee377c0";
+let views = {};
+
+function UpdateView(key){
+  if(views.hasOwnProperty(key)){
+    views[key] += 1;
+  }
+}
+
+function RenderView(key){
+  if(views.hasOwnProperty(key)){
+    return views[key];
+  }
+  return 0;
+}
 
 class NewsApp extends React.Component {
   constructor(props) {
@@ -38,34 +52,23 @@ class NewsApp extends React.Component {
       return (
         <div>
           { data.articles.map(article => (
-            <div className="card"> 
-            {/* <div style="width: 18rem;"></div> */}
-            <img className="card-img-top" src={article.urlToImage} alt="Card image cap" />
+            <div className="card" id={article.title} name={article.title}>
+            <h1 className="card-title">{article.title}</h1>
+            <img className="card-img-top" src={article.urlToImage} alt={article.title} />
             <div className="card-body">
-          <h5 className="card-title">{article.title}</h5>
-          <p className="card-text">{article.description}</p>
-              <a href={article.url} className="btn btn-primary">Read More</a>
+            <p className="card-text">{article.content ? article.content : article.description}</p>
+            <a href={article.url} className="btn btn-primary" onClick={UpdateView(article.title)} style={{display: "table-cell"}} target="_blank">Read More</a>
+            <p className="float-right">Views: {RenderView(article.title)}</p>
+            {/* <a  onClick={() => { views.clicks += 1; render();}}></a> */}
+            {/* <div onClick={this.props.onClick}>This div has been clicked {this.props.clicks} times.</div> */}
             </div>
+            <br/>
           </div>
           ))}
-        <ul>
-          {data.status}
-          {/* {items.map(item => (
-            <li key={item.name}>
-              {item.name} {item.price}
-            </li>
-          ))} */}
-        </ul>
         </div>
       );
     }
   }
 }
-
-// function NewsApp() {
-//   return (
-//     <div>Hello</div>
-//   );
-// }
 
 export default NewsApp;
