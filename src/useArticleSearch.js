@@ -14,7 +14,6 @@ export default function useArticleSearch(query, cat, pageNumber) {
   useEffect(() => {
     setLoading(true);
     setError(false);
-    let cancel;
     axios({
       method: 'GET',
       url: 'https://newsapi.org/v2/top-headlines',
@@ -22,21 +21,21 @@ export default function useArticleSearch(query, cat, pageNumber) {
                 page: pageNumber,
                 apiKey: "7e38d3a25cc74ddbacd9020dfee377c0",
                 pagesize: 10,
-                category: cat !== '' ? cat : 'general' },
-      cancelToken: new axios.CancelToken(c => cancel = c)
+                category: cat !== '' ? cat : 'general' }
     }).then(res => {
       console.log(res);
       setArticles(prevArticles => {
         return [...prevArticles, ...res.data.articles];
-      })
+      });
       setHasMore((pageNumber*10 < res.data.totalResults) && (pageNumber<10));
       setLoading(false);
+      if(res.data.totalResults === 0){
+        alert("No Results Found For This Keyword !!! Try Again")
+      }
     }).catch(e => {
-      if (axios.isCancel(e)) return;
       setError(true);
       console.log(e);
     })
-    return () => cancel();
   }, [query, cat, pageNumber])
 
   return { loading, error, articles, hasMore };

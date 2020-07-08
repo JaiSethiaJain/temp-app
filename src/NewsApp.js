@@ -1,15 +1,15 @@
 import React, { useState, useRef, useCallback } from 'react';
 import useArticleSearch from './useArticleSearch';
+import NewsCard from './NewsCard';
 import './bootstrap.min.css';
 
 export default function NewsApp() {
-  let temp = '';
-
   const [query, setQuery] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [cat, setCat] = useState('');
 
-  const {
+  let temp = '';
+  let {
     articles,
     hasMore,
     loading,
@@ -40,48 +40,49 @@ export default function NewsApp() {
 
   function handleSearchCall(e){
     e.preventDefault();
-    setQuery(temp);
-    setCat('');
-    setPageNumber(1);
+    if(temp === ''){
+      alert("Please Enter Some Keyword To Search For !!! Empty Strings Are Not Accepted");
+    }
+    else{
+      setQuery(temp);
+      setCat('');
+      setPageNumber(1);
+    }
   }
 
-  return (
-  <div className="NewsApp">
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto">
-                 <li className="nav-item"><div className="nav-link" value="general" onClick={() => {handleCat('general')}}>General</div></li>
-                 <li className="nav-item"><div className="nav-link" value="business" onClick={() => {handleCat('business')}}>Business</div></li>
-                 <li className="nav-item"><div className="nav-link" value="entertainment" onClick={() => {handleCat('entertainment')}}>Entertainment</div></li>
-                 <li className="nav-item"><div className="nav-link" value="health" onClick={() => {handleCat('health')}}>Health</div></li>
-                 <li className="nav-item"><div className="nav-link" value="science" onClick={() => {handleCat('science')}}>Science</div></li>
-                 <li className="nav-item"><div className="nav-link" value="sports" onClick={() => {handleCat('sports')}}>Sports</div></li>
-                 <li className="nav-item"><div className="nav-link" value="technology" onClick={() => {handleCat('technology')}}>Technology</div></li>
-        </ul>
-        <form className="form-inline my-2 my-lg-0" onSubmit={handleSearchCall}>
-          <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" onChange={handleSearch}/>
-          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-    </nav>
-    {
-      articles.map((item, index) => {
-        return(
-          <div ref={(articles.length === index+1) ? lastArticleElementRef : undefined } className="card" key={item.title}>
-            <h1 className="card-title">{item.title}</h1>
-            <img className="card-img-top" src={item.urlToImage} alt={item.title} />
-            <div className="card-body">
-              <p className="card-text">{item.content ? item.content : item.description}</p>
-              <a href={item.url} className="btn btn-primary float-left" style={{display: "table-cell"}} target="_blank" rel="noopener noreferrer">Read More</a>
-              <p className="float-right">Views: 0</p>
-            </div>
-            <br />
+  function render(){
+    return (
+      <div className="NewsApp">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div className="navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item"><a href="/" className="nav-link" value="general" onClick={(e) => {e.preventDefault(); handleCat('general')}}>General</a></li>
+              <li className="nav-item"><a href="/" className="nav-link" value="business" onClick={(e) => {e.preventDefault(); handleCat('business')}}>Business</a></li>
+              <li className="nav-item"><a href="/" className="nav-link" value="entertainment" onClick={(e) => {e.preventDefault(); handleCat('entertainment')}}>Entertainment</a></li>
+              <li className="nav-item"><a href="/" className="nav-link" value="health" onClick={(e) => {e.preventDefault(); handleCat('health')}}>Health</a></li>
+              <li className="nav-item"><a href="/" className="nav-link" value="science" onClick={(e) => {e.preventDefault(); handleCat('science')}}>Science</a></li>
+              <li className="nav-item"><a href="/" className="nav-link" value="sports" onClick={(e) => {e.preventDefault(); handleCat('sports')}}>Sports</a></li>
+              <li className="nav-item"><a href="/" className="nav-link" value="technology" onClick={(e) => {e.preventDefault(); handleCat('technology')}}>Technology</a></li>
+            </ul>
           </div>
-        );
-      })
-    }
-    <div>{loading && 'Loading...'}</div>
-    <div>{error && 'Error'}</div>
-  </div>
-  );
+          <form className="form-inline my-2 my-lg-0" onSubmit={handleSearchCall}>
+            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" onChange={handleSearch}/>
+            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </nav>
+        {
+          articles.map((item, index) => {
+            return(
+              <div ref={(articles.length === index+1) ? lastArticleElementRef : undefined } key={index}>
+                <NewsCard article={item} />
+              </div>
+            );
+          })
+        }
+        <div>{loading && 'Loading...'}</div>
+        <div>{error && 'Error: Something Went Wrong !!! Try Aging In Few Moments'}</div>
+      </div>
+    );
+  }
+return render();
 }
