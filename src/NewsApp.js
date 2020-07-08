@@ -80,7 +80,7 @@ export default function NewsApp() {
           })
         }
         <div>{loading && 'Loading...'}</div>
-        <div>{error && 'Error: Something Went Wrong !!! Try Aging In Few Moments'}</div>
+        <div>{error && 'Error: Something Went Wrong !!! Try Again In Few Moments'}</div>
       </div>
     );
   }
