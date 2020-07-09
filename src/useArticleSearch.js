@@ -16,7 +16,7 @@ export default function useArticleSearch(query, cat, pageNumber) {
     setError(false);
     axios({
       method: 'GET',
-      url: 'https://newsapi.org/v2/top-headlines',
+      url: 'http://ec2-18-222-83-136.us-east-2.compute.amazonaws.com:4500/v2/top-headlines',
       params: { q: query,
                 page: pageNumber,
                 apiKey: "7e38d3a25cc74ddbacd9020dfee377c0",
